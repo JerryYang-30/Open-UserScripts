@@ -19,6 +19,8 @@
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @run-at       document-idle
+// @updateURL    https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/raw/main/YouTube-Watch-Later-Redirect.meta.js
+// @downloadURL  https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/raw/main/YouTube-Watch-Later-Redirect.user.js
 // ==/UserScript==
 
 /*
