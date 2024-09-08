@@ -13,7 +13,7 @@
 
 [使用说明](#使用说明)
 
-[版本更新](#版本更新)
+[版本更新历史](#版本更新历史)
 
 [更新计划](#更新计划)
 
@@ -67,14 +67,9 @@ PS：关于YouTube稍后观看的脚本，我基本一个也没有搜到，为�
 - ![akxa0wcj 1gp](https://github.com/user-attachments/assets/b9a88306-3673-4d48-b232-7c951bc5b0c3)
 
 
-## 版本更新
+## 版本更新历史
 
-### 1.0.0 版本
-
-- 支持在 [YouTube稍后观看页面](https://www.youtube.com/playlist?list=WL) 对视频链接重定向。
-- 添加重定向提示框及其自定义设置功能。
-- 解决YouTube单页应用（SPA）中脚本未响应的问题。
-- 增加 URL 变化监听功能（捕捉浏览器前进后退）。
+请看[CHANGELOG](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/blob/main/CHANGELOG.md)
 
 ## 更新计划
 
