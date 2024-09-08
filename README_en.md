@@ -65,7 +65,7 @@ PS: I basically didn't find a single script for YouTube Watch Later, so I wrote 
 
 - The position, size, auto-hide time, and prompt word of the prompt box can be adjusted through the TamperMonkey script settings menu.
 - ![nulk3d1k i5t](https://github.com/user-attachments/assets/962120d8-0b76-41fd-ba78-bcf8f590e9eb)
-- ![klkfu1xj ccp](https://github.com/user-attachments/assets/984368f1-8359-43b7-af63-3e03b8fda92a)
+- ![akxa0wcj 1gp](https://github.com/user-attachments/assets/b9a88306-3673-4d48-b232-7c951bc5b0c3)
 
 ## Version_Updates
 
