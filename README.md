@@ -32,10 +32,12 @@ PS：关于YouTube稍后观看的脚本，我基本一个也没有搜到，为�
 
 ## 功能介绍
 
-- 自动将稍后观看列表中的视频链接重定向至视频的原始链接。（目前只针对从[YouTube稍后观看页面](此处应有链接) 点击的情况）
+- 自动将稍后观看列表中的视频链接重定向至视频的原始链接。（目前只针对从[YouTube稍后观看页面](https://www.youtube.com/playlist?list=WL) 点击的情况）
 - 支持鼠标左键和中键点击操作。
 - 在页面中显示重定向提示，并支持自定义提示框样式。
-- 适用于YouTube单页应用（SPA），从YouTube侧边栏进入稍后观看页面也会被监听到。（此处应有图片说明）
+- 适用于YouTube单页应用（SPA），从YouTube左侧边栏进入稍后观看页面也会被监听到。（即从下图红框框部分点击进入稍后观看的情况）
+- ![oupa45ku p3w](https://github.com/user-attachments/assets/08513620-ec39-4ccb-9f12-e4ce71c7de8b)
+
 
 ## 安装方法
 
@@ -45,18 +47,28 @@ PS：关于YouTube稍后观看的脚本，我基本一个也没有搜到，为�
 
 ## 使用说明（此处应有图片说明）
 
-- 脚本会自动在 [YouTube稍后观看页面](此处应有链接) 打开时，提前获取该视频的原始链接。
-- 用鼠标左键或中键点击稍后观看列表中视频时，脚本会自动跳转至视频的原始链接，并在新标签页中打开。
-- 用鼠标左键或中键点击视频的发布作者时，脚本会判断出此时不应该重定向，而是打开作者的个人主页。
-- 可以通过脚本设置菜单自定义是否显示“重定向完成”的提示框。
-- 可调整提示框的位置、大小、自动隐藏时间以及提示词。
-- 如需修改提示框样式，请在脚本运行时打开 Tampermonkey 菜单进行设置。
+- 脚本会自动在 [YouTube稍后观看页面](https://www.youtube.com/playlist?list=WL) 打开时，提前获取每个视频的原始链接，并默认返回提示，默认3秒后消失（如下图右下角）。
+- ![3mzfjbdq er2](https://github.com/user-attachments/assets/3b8d8787-d24b-4d1a-8236-a2f655672a78)
+
+- 用鼠标左键点击下图红框部分（除了绿框里）时，脚本会在新标签页中打开视频的原始链接。
+- 用鼠标中键点击下图蓝框部分时，脚本会在新标签页中打开视频的原始链接。
+- 用鼠标左键或中键点击视频的发布作者（下图绿框部分）时，脚本会判断出此时不应该重定向，而是打开作者的个人主页。
+- ![afytb1r1 0px](https://github.com/user-attachments/assets/e6170b88-2a40-40b3-80f7-60b8f5afb8ac)
+
+- 可以通过TamperMonkey脚本设置菜单自定义是否显示“重定向完成”的提示框。
+- ![ikmz1z15 gc1](https://github.com/user-attachments/assets/1a825c8c-2b2f-403f-8730-79b26c0a21ac)
+- ![3bbzl0q5 ucy](https://github.com/user-attachments/assets/f9ada660-bf7d-4b0a-bb4d-4505bda38cd1)
+
+
+- 可通过TamperMonkey脚本设置菜单调整提示框的位置、大小、自动隐藏时间以及提示词。
+- ![ijuj0khm y43](https://github.com/user-attachments/assets/fece4bda-4589-40c8-aa7a-5c4fb8d440d6)
+- ![klkfu1xj ccp](https://github.com/user-attachments/assets/984368f1-8359-43b7-af63-3e03b8fda92a)
 
 ## 版本更新
 
 ### 1.0.0 版本
 
-- 支持在 [YouTube稍后观看页面](此处应有链接) 对视频链接重定向。
+- 支持在 [YouTube稍后观看页面](https://www.youtube.com/playlist?list=WL) 对视频链接重定向。
 - 添加重定向提示框及其自定义设置功能。
 - 解决YouTube单页应用（SPA）中脚本未响应的问题。
 - 增加 URL 变化监听功能（捕捉浏览器前进后退）。
@@ -67,4 +79,4 @@ PS：关于YouTube稍后观看的脚本，我基本一个也没有搜到，为�
 
 ## 贡献与反馈
 
-如果你在使用过程中发现问题，或者有任何改进建议，欢迎通过 [GreasyFork](此处应有链接) 提交反馈 或在 [GitHub](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect) 提交 [Issue](此处应有链接) 或 [Pull Request](此处应有链接)。非常感谢你的反馈和贡献！
+如果你在使用过程中发现问题，或者有任何改进建议，欢迎通过 [GreasyFork](此处应有链接) 提交反馈 或在 [GitHub](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect) 提交 [Issue](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/issues) 或 [Pull Request](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/pulls)。非常感谢你的反馈和贡献！
