@@ -64,7 +64,8 @@ PS：关于YouTube稍后观看的脚本，我基本一个也没有搜到，为�
 
 - 可通过TamperMonkey脚本设置菜单调整提示框的位置、大小、自动隐藏时间以及提示词。
 - ![ijuj0khm y43](https://github.com/user-attachments/assets/fece4bda-4589-40c8-aa7a-5c4fb8d440d6)
-- ![klkfu1xj ccp](https://github.com/user-attachments/assets/984368f1-8359-43b7-af63-3e03b8fda92a)
+- ![akxa0wcj 1gp](https://github.com/user-attachments/assets/b9a88306-3673-4d48-b232-7c951bc5b0c3)
+
 
 ## 版本更新
 
