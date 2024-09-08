@@ -45,7 +45,7 @@ PS：关于YouTube稍后观看的脚本，我基本一个也没有搜到，为�
 
 1. 安装浏览器扩展 [Tampermonkey](https://www.tampermonkey.net/)。
 2. 点击 [Github源](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/raw/main/YouTube-Watch-Later-Redirect.user.js) 立刻安装。
-   或在[GreasyFork](此处应有链接)安装。
+   或在[GreasyFork](https://greasyfork.org/zh-CN/scripts/507417-youtube-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91)安装。
 
 ## 使用说明
 
@@ -81,4 +81,4 @@ PS：关于YouTube稍后观看的脚本，我基本一个也没有搜到，为�
 
 ## 贡献与反馈
 
-如果你在使用过程中发现问题，或者有任何改进建议，欢迎通过 [GreasyFork](此处应有链接) 提交反馈 或在 [GitHub](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect) 提交 [Issue](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/issues) 或 [Pull Request](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/pulls)。非常感谢你的反馈和贡献！
+如果你在使用过程中发现问题，或者有任何改进建议，欢迎通过 [GreasyFork](https://greasyfork.org/zh-CN/scripts/507417-youtube-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91/feedback) 提交反馈 或在 [GitHub](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect) 提交 [Issue](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/issues) 或 [Pull Request](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/pulls)。非常感谢你的反馈和贡献！
