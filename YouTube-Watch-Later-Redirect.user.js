@@ -1,0 +1,558 @@
+// ==UserScript==
+// @name         YouTube 稍后再看重定向
+// @name:en      YouTube Watch Later Redirect
+// @name:zh-CN        YouTube 稍后再看重定向
+// @name:zh-TW   YouTube 稍後再看重定向
+// @namespace    http://tampermonkey.net/
+// @version      1.0.0
+// @description 重定向YouTube稍后再看的视频链接到原始视频链接，并在新标签页中打开视频。
+// @description:en  Redirect YouTube Watch Later video links to their original video and open in a new tab.
+// @description:zh-CN  重定向YouTube稍后再看的视频链接到原始视频链接，并在新标签页中打开视频。
+// @description:zh-TW  重定向YouTube稍後再看的影片連結到原始影片，並在新標籤頁中開啟影片。
+// @author       JerryYang
+// @match        https://www.youtube.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=YouTube.com
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_registerMenuCommand
+// @run-at       document-idle
+// ==/UserScript==
+
+/*
+支持多语言
+*/
+    // 语言支持：英语 (en), 简体中文 (zh-CN), 繁体中文 (zh-TW)
+    const userLanguage = navigator.language || navigator.userLanguage;
+
+    // 多语言翻译资源
+    const translations = {
+        "en": {
+            "notificationMessage": "All videos have been successfully redirected!",
+            "enableNotification": "Enable Notification",
+            "disableNotification": "Disable Notification",
+            "adjustNotificationStyle": "Adjust Notification Style",
+            "resetDefaults": "Reset to Default Settings",
+            "confirmSave": "Are you sure you want to save the changes?",
+            "confirmReset": "Are you sure you want to reset to default settings? This action cannot be undone!",
+            "savedMessage": "Settings saved, click OK to refresh the page.",
+            "resetMessage": "Default settings restored, click OK to refresh the page.",
+            "enableNotificationMessage": "Notification has been enabled, click OK to refresh for changes to take effect.",
+            "disableNotificationMessage": "Notification has been disabled, click OK to refresh for changes to take effect."
+        },
+        "zh-CN": {
+            "notificationMessage": "全部视频已成功重定向！",
+            "enableNotification": "启用提示框",
+            "disableNotification": "禁用提示框",
+            "adjustNotificationStyle": "调整提示框样式",
+            "resetDefaults": "恢复默认设置",
+            "confirmSave": "确定要保存修改吗？此操作不可撤销！",
+            "confirmReset": "确定要恢复默认设置吗？此操作不可撤销！",
+            "savedMessage": "设置已保存，点击确定刷新页面以生效。",
+            "resetMessage": "默认设置已恢复，点击确定刷新页面以生效。",
+            "enableNotificationMessage": "提示框已启用，点击确定刷新后生效。",
+            "disableNotificationMessage": "提示框已禁用，点击确定刷新后生效。"
+        },
+        "zh-TW": {
+            "notificationMessage": "全部影片已成功重新導向！",
+            "enableNotification": "啟用提示框",
+            "disableNotification": "禁用提示框",
+            "adjustNotificationStyle": "調整提示框樣式",
+            "resetDefaults": "恢復預設設定",
+            "confirmSave": "確定要保存修改嗎？此操作不可撤銷！",
+            "confirmReset": "確定要恢復預設設定嗎？此操作不可撤銷！",
+            "savedMessage": "設定已保存，點擊確定刷新頁面以生效。",
+            "resetMessage": "預設設定已恢復，點擊確定刷新頁面以生效。",
+            "enableNotificationMessage": "提示框已啟用，點擊確定刷新後生效。",
+            "disableNotificationMessage": "提示框已禁用，點擊確定刷新後生效。"
+        }
+    };
+
+    // 根据用户语言设置获取翻译
+    const lang = userLanguage.startsWith('zh-TW') ? 'zh-TW' :
+    userLanguage.startsWith('zh') ? 'zh-CN' : 'en';
+    const t = translations[lang];
+
+// 主函数
+(function() {
+    'use strict';
+
+/*
+先判断当前是否为稍后再看页面
+*/
+
+    let lastUrl = window.location.href;  // 保存上一次的 URL
+
+    // 初次加载时初始化
+    if (window.location.href == "https://www.youtube.com/playlist?list=WL") {
+        redirector();
+    }
+
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach(mutation => {
+            mutation.addedNodes.forEach(node => {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    // 检查 Shadow DOM 中的元素
+                    if (node.shadowRoot) {
+                        const targetElement = node.shadowRoot.querySelector('yt-formatted-string.title.style-scope.ytd-guide-entry-renderer');
+                        if (targetElement) {
+                            targetElement.addEventListener('click', () => {
+                                //console.log('YouTube稍后再看脚本 - 点击了“稍后观看”按钮');
+                                redirector();
+                            });
+                        }
+                    }
+                    // 处理非 Shadow DOM 元素
+                    if (node.matches('yt-formatted-string.title.style-scope.ytd-guide-entry-renderer')) {
+                        node.addEventListener('click', () => {
+                            //console.log('YouTube稍后再看脚本 - 点击了“稍后观看”按钮');
+                            redirector();
+                        });
+                    }
+                }
+            });
+        });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // 监听 URL 变化 (pushState 和 popstate)
+    const originalPushState = history.pushState;
+    history.pushState = function() {
+        originalPushState.apply(this, arguments);
+        onUrlChange();
+    };
+
+    window.addEventListener('popstate', onUrlChange); // 处理前进和后退按钮
+
+/*
+对稍后再看页面作重定向处理
+*/
+
+    // 重定向
+    function redirector() {
+        //console.log('脚本: YouTube 稍后再看重定向 --- 初始化');
+
+        const observer = new MutationObserver((mutationsList, observer) => {
+            // 查询稍后再看列表中的视频元素
+            const items = document.querySelectorAll('div#meta.style-scope.ytd-playlist-video-renderer');
+
+            //console.log('YouTube稍后再看脚本 - 找到的元素数量:', items.length);
+
+            if (items.length > 0) { // 当找到元素时才执行后续逻辑。
+                showNotification(items.length + '个稍后再看视频已成功重定向！');
+                // 停止观察，避免重复触发
+                //console.log('YouTube稍后再看脚本 - 已找到元素，停止监听。');
+                observer.disconnect();
+
+                items.forEach(item => {
+                    if (!item.dataset.redirectBound) {
+                        item.dataset.redirectBound = true;
+
+                        // 鼠标悬停时，获取原始视频链接并准备重定向
+                        item.addEventListener('mouseover', function (event) {
+                            const target = event.target;
+                            if (target.hasAttribute('href')) {
+                                const href = target.getAttribute('href');
+                                if (href.includes('@')) { // 作者个人主页链接
+                                    // console.log('作者主页链接:', href);
+                                    return; // 提前终止，不作处理
+                                }
+                            }
+
+                            // 不是作者主页链接，处理视频重定向
+                            const linkElement = item.querySelector('a#video-title');
+                            if (linkElement) {
+                                const href = linkElement.getAttribute('href');
+                                if (href.includes('list=WL')) {
+                                    const videoId = href.match(/v=([^&]+)/)[1];
+                                    const originalUrl = `https://www.youtube.com/watch?v=${videoId}`;
+                                    linkElement.setAttribute('data-original-url', originalUrl);
+                                    // console.log('准备重定向到:', originalUrl);
+                                }
+                            }
+                        });
+
+                        // 左键点击在新标签页中打开原视频链接
+                        item.addEventListener('click', function (event) {
+                            handleLinkClick(event);
+                        });
+
+                        // 中键点击在新标签页中打开原视频链接
+                        item.addEventListener('auxclick', function (event) {
+                            if (event.button === 1) {
+                                handleLinkClick(event);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        // 监听 DOM 变化
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    function handleLinkClick(event) { // 处理左键和中键点击稍后再看视频的行为
+        const target = event.target;
+        if (target.hasAttribute('href') && target.getAttribute('href').includes('@')) {
+            return; // 点击的是作者主页链接，直接跳转，不重定向
+        }
+
+        const linkElement = target.closest('div#meta.style-scope.ytd-playlist-video-renderer').querySelector('a#video-title');
+        if (linkElement) {
+            const originalUrl = linkElement.getAttribute('data-original-url');
+            if (originalUrl) {
+                event.preventDefault();  // 阻止默认跳转行为
+                event.stopPropagation(); // 阻止事件冒泡
+                window.open(originalUrl, '_blank');  // 在新标签页中打开原视频链接
+                return false;  // 防止进一步的默认跳转行为
+            }
+        }
+    }
+
+    // 页面跳转或 URL 变化时触发重新初始化脚本
+    function onUrlChange() {
+        if (window.location.href !== lastUrl) {
+            //console.log('YouTube稍后再看脚本 - 检测到 URL 变化: ', window.location.href);
+            if (window.location.href == "https://www.youtube.com/playlist?list=WL") {
+                redirector();
+            }
+            lastUrl = window.location.href;  // 更新 lastUrl
+        }
+    }
+
+/*
+提示框及其菜单
+*/
+
+    // 默认设置
+    const defaultSettings = {
+        showNotification: true,
+        position: 'bottom-right',
+        width: 'auto',
+        height: 'auto',
+        hideAfter: 3000,
+        customMessage: t.notificationMessage  // 默认提示词
+    };
+
+    // 注册菜单项
+    function registerMenuCommands() {
+        if (!getSettings().showNotification) {
+            GM_registerMenuCommand(t.enableNotification, toggleNotification);
+        } else {
+            GM_registerMenuCommand(t.disableNotification, toggleNotification);
+            GM_registerMenuCommand(t.adjustNotificationStyle, createStyleAdjustmentPanel);
+        }
+    }
+
+    // 打开提示框开关菜单
+    function toggleNotification() {
+        const settings = getSettings();
+        const newShowNotification = !settings.showNotification;
+        saveSettings({ ...settings, showNotification: newShowNotification });
+
+        // 更新菜单项显示状态
+        updateMenuCommands();
+    }
+
+    // 更新菜单项显示状态
+    function updateMenuCommands() {
+        const settings = getSettings();
+        const newShowNotification = !settings.showNotification;
+        alert(`${newShowNotification ? t.enableNotificationMessage : t.disableNotificationMessage}`);
+        location.reload(); // 刷新页面
+    }
+
+    // 初次注册菜单项
+    registerMenuCommands();
+
+    // 创建样式调整面板并使用 Shadow DOM
+    function createStyleAdjustmentPanel() {
+        const settings = getSettings();
+        // 创建容器，并为其附加 Shadow DOM
+        const panelContainer = document.createElement('div');
+        panelContainer.style.position = 'fixed';
+        panelContainer.style.top = '0';
+        panelContainer.style.left = '0';
+        panelContainer.style.width = '100vw';
+        panelContainer.style.height = '100vh';
+        panelContainer.style.zIndex = '10001';
+        panelContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // 添加遮罩效果
+
+        const shadowRoot = panelContainer.attachShadow({ mode: 'open' });
+
+
+        if (userLanguage == "zh-CN") {
+            // 面板的 HTML 结构，简体中文
+            shadowRoot.innerHTML = `
+            <style>
+                #panel {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    padding: 20px;
+                    background-color: #f9f9f9;
+                    border: 1px solid #ccc;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                    z-index: 10002;
+                    width: 300px;
+                    height: auto;
+                }
+                button {
+                    margin-top: 15px;
+                }
+                #reset {
+                    position: absolute;
+                    bottom: 10px;
+                    right: 10px;
+                }
+            </style>
+            <div id="panel">
+                <h2>调整提示框样式(留空则不修改)</h2>
+                <label>
+                    提示框位置(bottom-right, top-right, top-left, bottom-left选其一):<br>
+                    <input type="text" id="position" placeholder="当前为${settings.position}">
+                </label><br>
+                <label>
+                    提示框宽度 (例如 200px，也可以auto):<br>
+                    <input type="text" id="width" placeholder="当前为${settings.width}">
+                </label><br>
+                <label>
+                    提示框长度 (例如 200px，也可以auto):<br>
+                    <input type="text" id="height" placeholder="当前为${settings.height}">
+                </label><br>
+                <label>
+                    提示框显示时间 (毫秒，输入数字即可):<br>
+                    <input type="number" id="hideAfter" placeholder="当前为${settings.hideAfter}ms">
+                </label><br>
+                <label>
+                    自定义提示词:<br>
+                    <input type="text" id="customMessage" placeholder="当前为“${settings.customMessage}”">
+                </label><br>
+                <button id="save">保存</button>
+                <button id="cancel">取消</button>
+                <button id="reset">恢复默认设置</button> <!-- 添加恢复默认设置按钮 -->
+            </div>
+        `;
+        } else if (userLanguage == "zh-TW") {
+            // 面板的 HTML 结构，繁体中文
+            shadowRoot.innerHTML = `
+            <style>
+                #panel {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    padding: 20px;
+                    background-color: #f9f9f9;
+                    border: 1px solid #ccc;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                    z-index: 10002;
+                    width: 300px;
+                    height: auto;
+                }
+                button {
+                    margin-top: 15px;
+                }
+                #reset {
+                    position: absolute;
+                    bottom: 10px;
+                    right: 10px;
+                }
+            </style>
+            <div id="panel">
+                <h2>調整提示框樣式(留空則不修改)</h2>
+                <label>
+                    提示框位置(bottom-right, top-right, top-left, bottom-left選其一):<br>
+                    <input type="text" id="position" placeholder="當前爲${settings.position}">
+                </label><br>
+                <label>
+                    提示框寬度 (例如 200px，也可以auto):<br>
+                    <input type="text" id="width" placeholder="當前爲${settings.width}">
+                </label><br>
+                <label>
+                    提示框長度 (例如 200px，也可以auto):<br>
+                    <input type="text" id="height" placeholder="當前爲${settings.height}">
+                </label><br>
+                <label>
+                    提示框顯示時間 (毫秒，輸入數字即可):<br>
+                    <input type="number" id="hideAfter" placeholder="當前爲${settings.hideAfter}ms">
+                </label><br>
+                <label>
+                    自定義提示詞:<br>
+                    <input type="text" id="customMessage" placeholder="當前爲“${settings.customMessage}”">
+                </label><br>
+                <button id="save">保存</button>
+                <button id="cancel">取消</button>
+                <button id="reset">恢復默認設置</button> <!-- 添加恢復默認設置按鈕 -->
+            </div>
+        `;
+        } else {
+            // 面板的 HTML 结构，英文
+            shadowRoot.innerHTML = `
+            <style>
+                #panel {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    padding: 20px;
+                    background-color: #f9f9f9;
+                    border: 1px solid #ccc;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                    z-index: 10002;
+                    width: 300px;
+                    height: auto;
+                }
+                button {
+                    margin-top: 15px;
+                }
+                #reset {
+                    position: absolute;
+                    bottom: 10px;
+                    right: 10px;
+                }
+            </style>
+            <div id="panel">
+                <h2>Adjust the style of the prompt box(leave blank to not modify)</h2>
+                <label>
+                    Prompt box position(Choose one: bottom-right, top-right, top-left, bottom-left):<br>
+                    <input type="text" id="position" placeholder="Currently ${settings.position}">
+                </label><br>
+                <label>
+                    Prompt box width (e.g. 200px, can also be auto):<br>
+                    <input type="text" id="width" placeholder="Currently ${settings.width}">
+                </label><br>
+                <label>
+                    Prompt box length (e.g. 200px, can also be auto):<br>
+                    <input type="text" id="height" placeholder="Currently ${settings.height}">
+                </label><br>
+                <label>
+                    The display time of the prompt box (milliseconds, just enter the number):<br>
+                    <input type="number" id="hideAfter" placeholder="Currently ${settings.hideAfter}ms">
+                </label><br>
+                <label>
+                    Custom prompt words:<br>
+                    <input type="text" id="customMessage" placeholder="Currently “${settings.customMessage}”">
+                </label><br>
+                <button id="save">Save</button>
+                <button id="cancel">Cancel</button>
+                <button id="reset">Restore default settings</button> <!-- Add the restore default settings button -->
+            </div>
+        `;
+        }
+
+
+        // 将面板插入到页面中
+        document.documentElement.appendChild(panelContainer);
+
+        // 绑定事件到 Shadow DOM 中的元素
+        shadowRoot.getElementById('save').addEventListener('click', () => saveSettingsByShadow(shadowRoot, panelContainer));
+        shadowRoot.getElementById('cancel').addEventListener('click', () => {
+            panelContainer.remove(); // 关闭面板
+        });
+
+        // 绑定恢复默认设置按钮的点击事件，并弹出确认框
+        shadowRoot.getElementById('reset').addEventListener('click', () => {
+            const confirmed = confirm(t.confirmReset);
+            if (confirmed) {
+                restoreDefaultSettings();
+                alert(t.resetMessage);
+                location.reload(); // 刷新页面
+            }
+        });
+    }
+
+    function saveSettingsByShadow(shadowRoot, panelContainer) {
+        const settings = getSettings();
+
+        const position = shadowRoot.getElementById('position').value || settings.position;
+        const width = shadowRoot.getElementById('width').value || settings.width;
+        const height = shadowRoot.getElementById('height').value || settings.height;
+        const hideAfter = parseInt(shadowRoot.getElementById('hideAfter').value, 10) || settings.hideAfter;
+        const customMessage = shadowRoot.getElementById('customMessage').value || settings.customMessage;
+
+        const confirmed = confirm(t.confirmSave);
+        if (confirmed) {
+            // 保存设置到 Tampermonkey/Greasemonkey 存储
+            GM_setValue('position', position);
+            GM_setValue('width', width);
+            GM_setValue('height', height);
+            GM_setValue('hideAfter', hideAfter);
+            GM_setValue('customMessage', customMessage);
+
+            // 提示并刷新页面
+            alert(t.savedMessage);
+            location.reload(); // 刷新页面
+        }
+    }
+
+    // 恢复默认设置的函数
+    function restoreDefaultSettings() {
+        GM_setValue('position', defaultSettings.position);
+        GM_setValue('width', defaultSettings.width);
+        GM_setValue('height', defaultSettings.height);
+        GM_setValue('hideAfter', defaultSettings.hideAfter);
+        GM_setValue('customMessage', defaultSettings.customMessage);
+    }
+
+    // 从存储中获取设置
+    function getSettings() {
+        return {
+            showNotification: GM_getValue('showNotification', defaultSettings.showNotification),
+            position: GM_getValue('position', defaultSettings.position),
+            width: GM_getValue('width', defaultSettings.width),
+            height: GM_getValue('height', defaultSettings.height),
+            hideAfter: GM_getValue('hideAfter', defaultSettings.hideAfter),
+            customMessage: GM_getValue('customMessage', defaultSettings.customMessage)
+        };
+    }
+
+    // 保存设置
+    function saveSettings(settings) {
+        GM_setValue('showNotification', settings.showNotification);
+        GM_setValue('position', settings.position);
+        GM_setValue('width', settings.width);
+        GM_setValue('height', settings.height);
+        GM_setValue('hideAfter', settings.hideAfter);
+    }
+
+    // 创建或更新提示框
+    function createNotification() {
+        const settings = getSettings();
+        const notification = document.getElementById('redirect-notification') || document.createElement('div');
+        notification.id = 'redirect-notification';
+        notification.style.position = 'fixed';
+        notification.style[settings.position.split('-')[0]] = '20px';
+        notification.style[settings.position.split('-')[1]] = '20px';
+        notification.style.width = settings.width;
+        notification.style.height = settings.height;
+        notification.style.padding = '10px 20px';
+        notification.style.backgroundColor = '#333';
+        notification.style.color = '#fff';
+        notification.style.fontSize = '16px';
+        notification.style.borderRadius = '5px';
+        notification.style.boxShadow = '0px 0px 10px rgba(0, 0, 0, 0.5)';
+        notification.style.zIndex = '10000';
+        notification.style.opacity = '0'; // 初始隐藏
+        notification.style.transition = 'opacity 0.5s'; // 动画效果
+        document.body.appendChild(notification);
+        return notification;
+    }
+
+    // 显示提示框，并在规定时间内自动消失
+    function showNotification(itemCount) {
+        const settings = getSettings();
+        if (!settings.showNotification) return;
+        const notification = createNotification();
+        notification.textContent = settings.customMessage;
+        notification.style.opacity = '1'; // 显示提示框
+
+        // 在指定时间后自动隐藏提示框
+        setTimeout(() => {
+            notification.style.opacity = '0'; // 隐藏提示框
+        }, settings.hideAfter);
+    }
+
+})();
