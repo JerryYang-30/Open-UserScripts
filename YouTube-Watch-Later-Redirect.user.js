@@ -5,11 +5,14 @@
 // @name:zh-TW   YouTube 稍後再看重定向
 // @namespace    http://tampermonkey.net/
 // @version      1.0.0
+// @author       JerryYang
 // @description  重定向YouTube稍后再看的视频链接到原始视频链接，并在新标签页中打开视频。
 // @description:en  Redirect YouTube Watch Later video links to their original video and open in a new tab.
 // @description:zh-CN  重定向YouTube稍后再看的视频链接到原始视频链接，并在新标签页中打开视频。
 // @description:zh-TW  重定向YouTube稍後再看的影片連結到原始影片，並在新標籤頁中開啟影片。
-// @author       JerryYang
+// @license      GPL-3.0 License
+// @homepage     https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect
+// @supportURL   https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect
 // @match        https://www.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=YouTube.com
 // @grant        GM_setValue
@@ -21,6 +24,7 @@
 /*
 支持多语言
 */
+
 // 语言支持：英语 (en), 简体中文 (zh-CN), 繁体中文 (zh-TW)
 const userLanguage = navigator.language || navigator.userLanguage;
 
