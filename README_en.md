@@ -69,12 +69,7 @@ PS: I basically didn't find a single script for YouTube Watch Later, so I wrote 
 
 ## Version_Updates
 
-### Version 1.0.0
-
-- Support redirection of video links in [YouTube Watch Later Page](https://www.youtube.com/playlist?list=WL).
-- Added redirection alert box and its customized settings.
-- Solve the problem of unresponsive script in YouTube Single Page Application (SPA).
-- Add URL change listening feature (catch browser forward and backward).
+Please watch [CHANGELOG](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/blob/main/CHANGELOG.md)
 
 ## Update_Plans
 
