@@ -30,7 +30,7 @@ But YouTube's Watch Later mode is enabled by default, and there's no way to turn
 
 Maybe you can wait until you're almost done and pause it first, then run to browse the comments section. But that would be a huge disruption to the viewing experience.
 
-**Is this tolerable? It's not tolerable! **
+**Is this tolerable? It's not tolerable!**
 
 So this script was born, watch the original video directly in normal mode, it's that simple~.
 
