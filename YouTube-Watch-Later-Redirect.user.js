@@ -21,56 +21,56 @@
 /*
 支持多语言
 */
-    // 语言支持：英语 (en), 简体中文 (zh-CN), 繁体中文 (zh-TW)
-    const userLanguage = navigator.language || navigator.userLanguage;
+// 语言支持：英语 (en), 简体中文 (zh-CN), 繁体中文 (zh-TW)
+const userLanguage = navigator.language || navigator.userLanguage;
 
-    // 多语言翻译资源
-    const translations = {
-        "en": {
-            "notificationMessage": "All videos have been successfully redirected!",
-            "enableNotification": "Enable Notification",
-            "disableNotification": "Disable Notification",
-            "adjustNotificationStyle": "Adjust Notification Style",
-            "resetDefaults": "Reset to Default Settings",
-            "confirmSave": "Are you sure you want to save the changes?",
-            "confirmReset": "Are you sure you want to reset to default settings? This action cannot be undone!",
-            "savedMessage": "Settings saved, click OK to refresh the page.",
-            "resetMessage": "Default settings restored, click OK to refresh the page.",
-            "enableNotificationMessage": "Notification has been enabled, click OK to refresh for changes to take effect.",
-            "disableNotificationMessage": "Notification has been disabled, click OK to refresh for changes to take effect."
-        },
-        "zh-CN": {
-            "notificationMessage": "全部视频已成功重定向！",
-            "enableNotification": "启用提示框",
-            "disableNotification": "禁用提示框",
-            "adjustNotificationStyle": "调整提示框样式",
-            "resetDefaults": "恢复默认设置",
-            "confirmSave": "确定要保存修改吗？此操作不可撤销！",
-            "confirmReset": "确定要恢复默认设置吗？此操作不可撤销！",
-            "savedMessage": "设置已保存，点击确定刷新页面以生效。",
-            "resetMessage": "默认设置已恢复，点击确定刷新页面以生效。",
-            "enableNotificationMessage": "提示框已启用，点击确定刷新后生效。",
-            "disableNotificationMessage": "提示框已禁用，点击确定刷新后生效。"
-        },
-        "zh-TW": {
-            "notificationMessage": "全部影片已成功重新導向！",
-            "enableNotification": "啟用提示框",
-            "disableNotification": "禁用提示框",
-            "adjustNotificationStyle": "調整提示框樣式",
-            "resetDefaults": "恢復預設設定",
-            "confirmSave": "確定要保存修改嗎？此操作不可撤銷！",
-            "confirmReset": "確定要恢復預設設定嗎？此操作不可撤銷！",
-            "savedMessage": "設定已保存，點擊確定刷新頁面以生效。",
-            "resetMessage": "預設設定已恢復，點擊確定刷新頁面以生效。",
-            "enableNotificationMessage": "提示框已啟用，點擊確定刷新後生效。",
-            "disableNotificationMessage": "提示框已禁用，點擊確定刷新後生效。"
-        }
-    };
+// 多语言翻译资源
+const translations = {
+    "en": {
+        "notificationMessage": "All videos have been successfully redirected!",
+        "enableNotification": "Enable Notification",
+        "disableNotification": "Disable Notification",
+        "adjustNotificationStyle": "Adjust Notification Style",
+        "resetDefaults": "Reset to Default Settings",
+        "confirmSave": "Are you sure you want to save the changes?",
+        "confirmReset": "Are you sure you want to reset to default settings? This action cannot be undone!",
+        "savedMessage": "Settings saved, click OK to refresh the page.",
+        "resetMessage": "Default settings restored, click OK to refresh the page.",
+        "enableNotificationMessage": "Notification has been enabled, click OK to refresh for changes to take effect.",
+        "disableNotificationMessage": "Notification has been disabled, click OK to refresh for changes to take effect."
+    },
+    "zh-CN": {
+        "notificationMessage": "全部视频已成功重定向！",
+        "enableNotification": "启用提示框",
+        "disableNotification": "禁用提示框",
+        "adjustNotificationStyle": "调整提示框样式",
+        "resetDefaults": "恢复默认设置",
+        "confirmSave": "确定要保存修改吗？此操作不可撤销！",
+        "confirmReset": "确定要恢复默认设置吗？此操作不可撤销！",
+        "savedMessage": "设置已保存，点击确定刷新页面以生效。",
+        "resetMessage": "默认设置已恢复，点击确定刷新页面以生效。",
+        "enableNotificationMessage": "提示框已启用，点击确定刷新后生效。",
+        "disableNotificationMessage": "提示框已禁用，点击确定刷新后生效。"
+    },
+    "zh-TW": {
+        "notificationMessage": "全部影片已成功重新導向！",
+        "enableNotification": "啟用提示框",
+        "disableNotification": "禁用提示框",
+        "adjustNotificationStyle": "調整提示框樣式",
+        "resetDefaults": "恢復預設設定",
+        "confirmSave": "確定要保存修改嗎？此操作不可撤銷！",
+        "confirmReset": "確定要恢復預設設定嗎？此操作不可撤銷！",
+        "savedMessage": "設定已保存，點擊確定刷新頁面以生效。",
+        "resetMessage": "預設設定已恢復，點擊確定刷新頁面以生效。",
+        "enableNotificationMessage": "提示框已啟用，點擊確定刷新後生效。",
+        "disableNotificationMessage": "提示框已禁用，點擊確定刷新後生效。"
+    }
+};
 
-    // 根据用户语言设置获取翻译
-    const lang = userLanguage.startsWith('zh-TW') ? 'zh-TW' :
-    userLanguage.startsWith('zh') ? 'zh-CN' : 'en';
-    const t = translations[lang];
+// 根据用户语言设置获取翻译
+const lang = userLanguage.startsWith('zh-TW') ? 'zh-TW' :
+userLanguage.startsWith('zh') ? 'zh-CN' : 'en';
+const t = translations[lang];
 
 // 主函数
 (function() {
