@@ -49,7 +49,7 @@ PS: I basically didn't find a single script for YouTube Watch Later, so I wrote 
 
 1. Install the browser extension [Tampermonkey](https://www.tampermonkey.net/).
 2. Click [Github Source](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/raw/main/YouTube-Watch-Later-Redirect.user.js) to install it now.
-   Or install it at [GreasyFork](here is the link).
+   Or install it at [GreasyFork](https://greasyfork.org/zh-CN/scripts/507417-youtube-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91).
 
 ## Instructions
 
@@ -82,4 +82,4 @@ PS: I basically didn't find a single script for YouTube Watch Later, so I wrote 
 
 ## Contribution_and_Feedback
 
-If you've found a problem, or have any suggestions for improvements, feel free to submit feedback via [GreasyFork](here's the link) or on [GitHub](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect) [ Issue](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/issues) or [Pull Request](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/pulls). Your feedback and contributions are greatly appreciated!
+If you've found a problem, or have any suggestions for improvements, feel free to submit feedback via [GreasyFork](https://greasyfork.org/zh-CN/scripts/507417-youtube-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91/feedback) or on [GitHub Issue](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/issues) or [Pull Request](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/pulls). Your feedback and contributions are greatly appreciated!
