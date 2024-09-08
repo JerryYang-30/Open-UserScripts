@@ -4,7 +4,7 @@
 // @name:zh-CN   YouTube 稍后再看重定向
 // @name:zh-TW   YouTube 稍後再看重定向
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1.2024.0908
 // @author       JerryYang
 // @description  重定向YouTube稍后再看的视频链接到原始视频链接，并在新标签页中打开视频。
 // @description:en  Redirect YouTube Watch Later video links to their original video and open in a new tab.
@@ -19,8 +19,8 @@
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @run-at       document-idle
-// @updateURL    https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/raw/main/YouTube-Watch-Later-Redirect.meta.js
-// @downloadURL  https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/raw/main/YouTube-Watch-Later-Redirect.user.js
+// @downloadURL https://update.greasyfork.org/scripts/507417/YouTube%20%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91.user.js
+// @updateURL https://update.greasyfork.org/scripts/507417/YouTube%20%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91.meta.js
 // ==/UserScript==
 
 /*
@@ -43,7 +43,17 @@ const translations = {
         "savedMessage": "Settings saved, click OK to refresh the page.",
         "resetMessage": "Default settings restored, click OK to refresh the page.",
         "enableNotificationMessage": "Notification has been enabled, click OK to refresh for changes to take effect.",
-        "disableNotificationMessage": "Notification has been disabled, click OK to refresh for changes to take effect."
+        "disableNotificationMessage": "Notification has been disabled, click OK to refresh for changes to take effect.",
+        "adjustPanelH2Title": "Adjust the style of the prompt box(leave blank to not modify)",
+        "adjustPanelPosition": "Select prompt box location",
+        "adjustPanelWidth": "Prompt box width (can also be auto)",
+        "adjustPanelHeight": "Prompt box length (can also be auto)",
+        "adjustPanelHideAfter": "The display time of the prompt box (milliseconds, just enter the number)",
+        "adjustPanelCustomMessage": "Custom prompt words",
+        "adjustPanelSave": "Save",
+        "adjustPanelCancel": "Cancel",
+        "adjustPanelReset": "Restore default settings",
+        "adjustPanelPlaceholder": "Currently "
     },
     "zh-CN": {
         "notificationMessage": "全部视频已成功重定向！",
@@ -56,7 +66,17 @@ const translations = {
         "savedMessage": "设置已保存，点击确定刷新页面以生效。",
         "resetMessage": "默认设置已恢复，点击确定刷新页面以生效。",
         "enableNotificationMessage": "提示框已启用，点击确定刷新后生效。",
-        "disableNotificationMessage": "提示框已禁用，点击确定刷新后生效。"
+        "disableNotificationMessage": "提示框已禁用，点击确定刷新后生效。",
+        "adjustPanelH2Title": "调整提示框样式(留空则不修改)",
+        "adjustPanelPosition": "选择提示框位置",
+        "adjustPanelWidth": "提示框宽度（可以填auto）",
+        "adjustPanelHeight": "提示框长度（可以填auto）",
+        "adjustPanelHideAfter": "提示框显示时间（毫秒，输入数字即可）",
+        "adjustPanelCustomMessage": "自定义提示词",
+        "adjustPanelSave": "保存",
+        "adjustPanelCancel": "取消",
+        "adjustPanelReset": "恢复默认设置",
+        "adjustPanelPlaceholder": "当前为"
     },
     "zh-TW": {
         "notificationMessage": "全部影片已成功重新導向！",
@@ -69,7 +89,17 @@ const translations = {
         "savedMessage": "設定已保存，點擊確定刷新頁面以生效。",
         "resetMessage": "預設設定已恢復，點擊確定刷新頁面以生效。",
         "enableNotificationMessage": "提示框已啟用，點擊確定刷新後生效。",
-        "disableNotificationMessage": "提示框已禁用，點擊確定刷新後生效。"
+        "disableNotificationMessage": "提示框已禁用，點擊確定刷新後生效。",
+        "adjustPanelH2Title": "调整提示框样式(留空则不修改)",
+        "adjustPanelPosition": "選擇提示框位置",
+        "adjustPanelWidth": "提示框寬度（可以填auto）",
+        "adjustPanelHeight": "提示框長度 (可以填auto)",
+        "adjustPanelHideAfter": "提示框顯示時間 (毫秒，輸入數字即可)",
+        "adjustPanelCustomMessage": "自定義提示詞",
+        "adjustPanelSave": "保存",
+        "adjustPanelCancel": "取消",
+        "adjustPanelReset": "恢復默認設置",
+        "adjustPanelPlaceholder": "當前爲"
     }
 };
 
@@ -145,7 +175,7 @@ const t = translations[lang];
             //console.log('YouTube稍后再看脚本 - 找到的元素数量:', items.length);
 
             if (items.length > 0) { // 当找到元素时才执行后续逻辑。
-                showNotification(items.length + '个稍后再看视频已成功重定向！');
+                showNotification(items.length);
                 // 停止观察，避免重复触发
                 //console.log('YouTube稍后再看脚本 - 已找到元素，停止监听。');
                 observer.disconnect();
@@ -287,174 +317,115 @@ const t = translations[lang];
 
         const shadowRoot = panelContainer.attachShadow({ mode: 'open' });
 
-
-        if (userLanguage == "zh-CN") {
-            // 面板的 HTML 结构，简体中文
-            shadowRoot.innerHTML = `
-            <style>
-                #panel {
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    padding: 20px;
-                    background-color: #f9f9f9;
-                    border: 1px solid #ccc;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-                    z-index: 10002;
-                    width: 300px;
-                    height: auto;
-                }
-                button {
-                    margin-top: 15px;
-                }
-                #reset {
-                    position: absolute;
-                    bottom: 10px;
-                    right: 10px;
-                }
-            </style>
-            <div id="panel">
-                <h2>调整提示框样式(留空则不修改)</h2>
-                <label>
-                    提示框位置(bottom-right, top-right, top-left, bottom-left选其一):<br>
-                    <input type="text" id="position" placeholder="当前为${settings.position}">
-                </label><br>
-                <label>
-                    提示框宽度 (例如 200px，也可以auto):<br>
-                    <input type="text" id="width" placeholder="当前为${settings.width}">
-                </label><br>
-                <label>
-                    提示框长度 (例如 200px，也可以auto):<br>
-                    <input type="text" id="height" placeholder="当前为${settings.height}">
-                </label><br>
-                <label>
-                    提示框显示时间 (毫秒，输入数字即可):<br>
-                    <input type="number" id="hideAfter" placeholder="当前为${settings.hideAfter}ms">
-                </label><br>
-                <label>
-                    自定义提示词:<br>
-                    <input type="text" id="customMessage" placeholder="当前为“${settings.customMessage}”">
-                </label><br>
-                <button id="save">保存</button>
-                <button id="cancel">取消</button>
-                <button id="reset">恢复默认设置</button> <!-- 添加恢复默认设置按钮 -->
-            </div>
-        `;
-        } else if (userLanguage == "zh-TW") {
-            // 面板的 HTML 结构，繁体中文
-            shadowRoot.innerHTML = `
-            <style>
-                #panel {
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    padding: 20px;
-                    background-color: #f9f9f9;
-                    border: 1px solid #ccc;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-                    z-index: 10002;
-                    width: 300px;
-                    height: auto;
-                }
-                button {
-                    margin-top: 15px;
-                }
-                #reset {
-                    position: absolute;
-                    bottom: 10px;
-                    right: 10px;
-                }
-            </style>
-            <div id="panel">
-                <h2>調整提示框樣式(留空則不修改)</h2>
-                <label>
-                    提示框位置(bottom-right, top-right, top-left, bottom-left選其一):<br>
-                    <input type="text" id="position" placeholder="當前爲${settings.position}">
-                </label><br>
-                <label>
-                    提示框寬度 (例如 200px，也可以auto):<br>
-                    <input type="text" id="width" placeholder="當前爲${settings.width}">
-                </label><br>
-                <label>
-                    提示框長度 (例如 200px，也可以auto):<br>
-                    <input type="text" id="height" placeholder="當前爲${settings.height}">
-                </label><br>
-                <label>
-                    提示框顯示時間 (毫秒，輸入數字即可):<br>
-                    <input type="number" id="hideAfter" placeholder="當前爲${settings.hideAfter}ms">
-                </label><br>
-                <label>
-                    自定義提示詞:<br>
-                    <input type="text" id="customMessage" placeholder="當前爲“${settings.customMessage}”">
-                </label><br>
-                <button id="save">保存</button>
-                <button id="cancel">取消</button>
-                <button id="reset">恢復默認設置</button> <!-- 添加恢復默認設置按鈕 -->
-            </div>
-        `;
-        } else {
-            // 面板的 HTML 结构，英文
-            shadowRoot.innerHTML = `
-            <style>
-                #panel {
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    padding: 20px;
-                    background-color: #f9f9f9;
-                    border: 1px solid #ccc;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-                    z-index: 10002;
-                    width: 300px;
-                    height: auto;
-                }
-                button {
-                    margin-top: 15px;
-                }
-                #reset {
-                    position: absolute;
-                    bottom: 10px;
-                    right: 10px;
-                }
-            </style>
-            <div id="panel">
-                <h2>Adjust the style of the prompt box(leave blank to not modify)</h2>
-                <label>
-                    Prompt box position(Choose one: bottom-right, top-right, top-left, bottom-left):<br>
-                    <input type="text" id="position" placeholder="Currently ${settings.position}">
-                </label><br>
-                <label>
-                    Prompt box width (e.g. 200px, can also be auto):<br>
-                    <input type="text" id="width" placeholder="Currently ${settings.width}">
-                </label><br>
-                <label>
-                    Prompt box length (e.g. 200px, can also be auto):<br>
-                    <input type="text" id="height" placeholder="Currently ${settings.height}">
-                </label><br>
-                <label>
-                    The display time of the prompt box (milliseconds, just enter the number):<br>
-                    <input type="number" id="hideAfter" placeholder="Currently ${settings.hideAfter}ms">
-                </label><br>
-                <label>
-                    Custom prompt words:<br>
-                    <input type="text" id="customMessage" placeholder="Currently “${settings.customMessage}”">
-                </label><br>
-                <button id="save">Save</button>
-                <button id="cancel">Cancel</button>
-                <button id="reset">Restore default settings</button> <!-- Add the restore default settings button -->
-            </div>
-        `;
-        }
-
+        shadowRoot.innerHTML = `
+        <style>
+            #panel {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 20px;
+                background-color: #f9f9f9;
+                border: 1px solid #ccc;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                z-index: 10002;
+                width: 300px;
+                height: auto;
+            }
+            button {
+                margin-top: 15px;
+            }
+            #reset {
+                position: absolute;
+                bottom: 10px;
+                right: 10px;
+            }
+        </style>
+        <div id="panel">
+            <h2>${t.adjustPanelH2Title}</h2>
+            <label>
+                ${t.adjustPanelPosition}(now at ${settings.position}):<br>
+                <select id="position-select">
+                    <option value="bottom-right">bottom-right</option>
+                    <option value="top-right">top-right</option>
+                    <option value="top-left">top-left</option>
+                    <option value="bottom-left">bottom-left</option>
+                </select>
+            </label><br>
+            <label>
+                ${t.adjustPanelWidth}:<br>
+                <input type="text" id="width" placeholder="${t.adjustPanelPlaceholder}${settings.width}">
+            </label><br>
+            <label>
+                ${t.adjustPanelHeight}:<br>
+                <input type="text" id="height" placeholder="${t.adjustPanelPlaceholder}${settings.height}">
+            </label><br>
+            <label>
+                ${t.adjustPanelHideAfter}:<br>
+                <input type="number" id="hideAfter" placeholder="${t.adjustPanelPlaceholder}${settings.hideAfter}ms">
+            </label><br>
+            <label>
+                ${t.adjustPanelCustomMessage}:<br>
+                <input type="text" id="customMessage" placeholder="${t.adjustPanelPlaceholder}“${settings.customMessage}”">
+            </label><br>
+            <button id="save">${t.adjustPanelSave}</button>
+            <button id="cancel">${t.adjustPanelCancel}</button>
+            <button id="reset">${t.adjustPanelReset}</button> <!-- 添加恢复默认设置按钮 -->
+        </div>
+    `;
 
         // 将面板插入到页面中
         document.documentElement.appendChild(panelContainer);
 
+        const positionSelect = shadowRoot.querySelector('#position-select');
+        window.selectedPosition = settings.position;
+
+        // 监听 select 元素的 change 事件
+        positionSelect.addEventListener('change', function(event) {
+            selectedPosition = event.target.value; // 获取当前选择的值
+            console.log('稍后再看Selected position:', selectedPosition);
+
+            // 将选择的值保存到一个变量或状态中
+            // 如果需要在点击保存按钮时使用
+            window.selectedPosition = selectedPosition;
+            //console.log('稍后再看window.selectedPosition为：', window.selectedPosition);
+        });
+
         // 绑定事件到 Shadow DOM 中的元素
-        shadowRoot.getElementById('save').addEventListener('click', () => saveSettingsByShadow(shadowRoot, panelContainer));
+        // shadowRoot.getElementById('save').addEventListener('click', () => saveSettingsByPanel(shadowRoot));
+        // 使用全局变量
+        window.shadowRoot = shadowRoot;
+        shadowRoot.getElementById('save').addEventListener('click', () => {
+            const confirmed = confirm(t.confirmSave);
+            if (!confirmed) {
+                return;
+            }
+
+            const settings = getSettings();
+            const newPosition = window.selectedPosition;
+            // 获取其他设置值，如果为空则保持原值
+            const shadowRoot = window.shadowRoot;
+            const newWidth = shadowRoot.getElementById('width').value || settings.width;
+            const newHeight = shadowRoot.getElementById('height').value || settings.height;
+            const newHideAfter = parseInt(shadowRoot.getElementById('hideAfter').value, 10) || settings.hideAfter;
+            const newCustomMessage = shadowRoot.getElementById('customMessage').value;
+
+            const newSettings = {
+                ...settings,
+                position: newPosition,
+                width: newWidth,
+                height: newHeight,
+                hideAfter: newHideAfter,
+                customMessage: newCustomMessage
+            };
+
+            saveSettings(newSettings);
+
+            // 提示并刷新页面
+            alert(t.savedMessage);
+            location.reload(); // 刷新页面
+        });
+
         shadowRoot.getElementById('cancel').addEventListener('click', () => {
             panelContainer.remove(); // 关闭面板
         });
@@ -470,29 +441,37 @@ const t = translations[lang];
         });
     }
 
-    function saveSettingsByShadow(shadowRoot, panelContainer) {
-        const settings = getSettings();
+    // 不想为了传递一个shadowRoot参数，而定义一个函数
+    // function saveSettingsByPanel(shadowRoot){
+    //     const confirmed = confirm(t.confirmSave);
+    //     if (!confirmed) {
+    //         return;
+    //     }
 
-        const position = shadowRoot.getElementById('position').value || settings.position;
-        const width = shadowRoot.getElementById('width').value || settings.width;
-        const height = shadowRoot.getElementById('height').value || settings.height;
-        const hideAfter = parseInt(shadowRoot.getElementById('hideAfter').value, 10) || settings.hideAfter;
-        const customMessage = shadowRoot.getElementById('customMessage').value || settings.customMessage;
+    //     //console.log("稍后再看selectedPosition为：", window.selectedPosition);
+    //     const settings = getSettings();
+    //     const newPosition = window.selectedPosition;
+    //     // 获取其他设置值，如果为空则保持原值
+    //     const newWidth = shadowRoot.getElementById('width').value || settings.width;
+    //     const newHeight = shadowRoot.getElementById('height').value || settings.height;
+    //     const newHideAfter = parseInt(shadowRoot.getElementById('hideAfter').value, 10) || settings.hideAfter;
+    //     const newCustomMessage = shadowRoot.getElementById('customMessage').value || settings.customMessage;
 
-        const confirmed = confirm(t.confirmSave);
-        if (confirmed) {
-            // 保存设置到 Tampermonkey/Greasemonkey 存储
-            GM_setValue('position', position);
-            GM_setValue('width', width);
-            GM_setValue('height', height);
-            GM_setValue('hideAfter', hideAfter);
-            GM_setValue('customMessage', customMessage);
+    //     const newSettings = {
+    //         ...settings,
+    //         position: newPosition,
+    //         width: newWidth,
+    //         height: newHeight,
+    //         hideAfter: newHideAfter,
+    //         customMessage: newCustomMessage
+    //     };
 
-            // 提示并刷新页面
-            alert(t.savedMessage);
-            location.reload(); // 刷新页面
-        }
-    }
+    //     saveSettings(newSettings);
+
+    //     // 提示并刷新页面
+    //     alert(t.savedMessage);
+    //     location.reload(); // 刷新页面
+    // }
 
     // 恢复默认设置的函数
     function restoreDefaultSettings() {
@@ -522,6 +501,7 @@ const t = translations[lang];
         GM_setValue('width', settings.width);
         GM_setValue('height', settings.height);
         GM_setValue('hideAfter', settings.hideAfter);
+        GM_setValue('customMessage', settings.customMessage);
     }
 
     // 创建或更新提示框

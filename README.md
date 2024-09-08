@@ -44,8 +44,9 @@ PS：关于YouTube稍后观看的脚本，我基本一个也没有搜到，为�
 ## 安装方法
 
 1. 安装浏览器扩展 [Tampermonkey](https://www.tampermonkey.net/)。
-2. 点击 [Github源](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/raw/main/YouTube-Watch-Later-Redirect.user.js) 立刻安装。
-   或在[GreasyFork](https://greasyfork.org/zh-CN/scripts/507417-youtube-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91)安装。
+2. 在[GreasyFork](https://greasyfork.org/zh-CN/scripts/507417-youtube-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91)安装。
+3. 或 [→点击此处←](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/raw/main/YouTube-Watch-Later-Redirect.user.js) 立刻安装（利用GreasyFork源更新）。
+   
 
 ## 使用说明
 
