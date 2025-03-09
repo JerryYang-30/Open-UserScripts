@@ -4,7 +4,7 @@
 // @name:zh-CN   YouTube 稍后再看重定向
 // @name:zh-TW   YouTube 稍後再看重定向
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1.2024.0908
+// @version      1.1.20250309
 // @author       JerryYang
 // @description  重定向YouTube稍后再看的视频链接到原始视频链接，并在新标签页中打开视频。
 // @description:en  Redirect YouTube Watch Later video links to their original video and open in a new tab.
@@ -164,61 +164,84 @@ const t = translations[lang];
 对稍后再看页面作重定向处理
 */
 
-    // 重定向
+// 重定向
     function redirector() {
-        //console.log('脚本: YouTube 稍后再看重定向 --- 初始化');
-
         const observer = new MutationObserver((mutationsList, observer) => {
             // 查询稍后再看列表中的视频元素
-            const items = document.querySelectorAll('div#meta.style-scope.ytd-playlist-video-renderer');
+            const items = document.querySelectorAll('div#content.style-scope.ytd-playlist-video-renderer');
 
-            //console.log('YouTube稍后再看脚本 - 找到的元素数量:', items.length);
-
-            if (items.length > 0) { // 当找到元素时才执行后续逻辑。
+            if (items.length > 0) {
                 showNotification(items.length);
-                // 停止观察，避免重复触发
-                //console.log('YouTube稍后再看脚本 - 已找到元素，停止监听。');
                 observer.disconnect();
 
                 items.forEach(item => {
                     if (!item.dataset.redirectBound) {
                         item.dataset.redirectBound = true;
 
-                        // 鼠标悬停时，获取原始视频链接并准备重定向
-                        item.addEventListener('mouseover', function (event) {
-                            const target = event.target;
-                            if (target.hasAttribute('href')) {
-                                const href = target.getAttribute('href');
-                                if (href.includes('@')) { // 作者个人主页链接
-                                    // console.log('作者主页链接:', href);
-                                    return; // 提前终止，不作处理
-                                }
-                            }
+                        // 获取缩略图和标题区域
+                        const thumbnail = item.querySelector('ytd-thumbnail#thumbnail');
+                        const metaArea = item.querySelector('div#meta');
 
-                            // 不是作者主页链接，处理视频重定向
-                            const linkElement = item.querySelector('a#video-title');
-                            if (linkElement) {
-                                const href = linkElement.getAttribute('href');
-                                if (href.includes('list=WL')) {
+                        if (thumbnail && metaArea) {
+                            // 处理缩略图区域
+                            const videoTitle = metaArea.querySelector('a#video-title');
+                            if (videoTitle) {
+                                const href = videoTitle.getAttribute('href');
+                                if (href && href.includes('list=WL')) {
                                     const videoId = href.match(/v=([^&]+)/)[1];
                                     const originalUrl = `https://www.youtube.com/watch?v=${videoId}`;
-                                    linkElement.setAttribute('data-original-url', originalUrl);
-                                    // console.log('准备重定向到:', originalUrl);
+                                    // 存储原始URL到缩略图元素
+                                    thumbnail.setAttribute('data-original-url', originalUrl);
+                                    
+                                    // 为缩略图内的所有可点击元素添加事件处理
+                                    thumbnail.querySelectorAll('a, img, .yt-core-image').forEach(element => {
+                                        
+                                        // 左键点击缩略图
+                                        element.addEventListener('click', function(event) {
+                                            event.preventDefault();
+                                            event.stopPropagation();
+                                            window.open(originalUrl, '_blank');
+                                            return false;
+                                        });
+
+                                        // 中键点击缩略图
+                                        element.addEventListener('auxclick', function(event) {
+                                            if (event.button === 1) {
+                                                event.preventDefault();
+                                                event.stopPropagation();
+                                                window.open(originalUrl, '_blank');
+                                                return false;
+                                            }
+                                        });
+                                    });
                                 }
                             }
-                        });
 
-                        // 左键点击在新标签页中打开原视频链接
-                        item.addEventListener('click', function (event) {
-                            handleLinkClick(event);
-                        });
+                            // 处理标题区域
+                            metaArea.addEventListener('mouseover', function() {
+                                const videoTitle = metaArea.querySelector('a#video-title');
+                                if (videoTitle) {
+                                    const href = videoTitle.getAttribute('href');
+                                    if (href && href.includes('list=WL')) {
+                                        const videoId = href.match(/v=([^&]+)/)[1];
+                                        const originalUrl = `https://www.youtube.com/watch?v=${videoId}`;
+                                        videoTitle.setAttribute('data-original-url', originalUrl);
+                                    }
+                                }
+                            });
 
-                        // 中键点击在新标签页中打开原视频链接
-                        item.addEventListener('auxclick', function (event) {
-                            if (event.button === 1) {
+                            // 左键点击标题
+                            metaArea.addEventListener('click', function(event) {
                                 handleLinkClick(event);
-                            }
-                        });
+                            });
+
+                            // 中键点击标题
+                            metaArea.addEventListener('auxclick', function(event) {
+                                if (event.button === 1) {
+                                    handleLinkClick(event);
+                                }
+                            });
+                        }
                     }
                 });
             }
