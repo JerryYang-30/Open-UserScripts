@@ -53,10 +53,9 @@ PS：关于YouTube稍后观看的脚本，我基本一个也没有搜到，为�
 - 脚本会自动在 [YouTube稍后观看页面](https://www.youtube.com/playlist?list=WL) 打开时，提前获取每个视频的原始链接，并默认返回提示，默认3秒后消失（如下图右下角）。
 - ![3mzfjbdq er2](https://github.com/user-attachments/assets/3b8d8787-d24b-4d1a-8236-a2f655672a78)
 
-- 用鼠标左键点击下图红框部分（除了绿框里）时，脚本会在新标签页中打开视频的原始链接。
-- 用鼠标中键点击下图蓝框部分时，脚本会在新标签页中打开视频的原始链接。
+- 用鼠标左键或中键点击下图红框部分（除了绿框里）时，脚本会在新标签页中打开视频的原始链接。
 - 用鼠标左键或中键点击视频的发布作者（下图绿框部分）时，脚本会判断出此时不应该重定向，而是打开作者的个人主页。
-- ![afytb1r1 0px](https://github.com/user-attachments/assets/e6170b88-2a40-40b3-80f7-60b8f5afb8ac)
+- ![afytb1r1 0px](https://github.com/user-attachments/assets/b73b4982-e866-4833-aafd-8f617795fe91)
 
 - 可以通过TamperMonkey脚本设置菜单自定义是否显示“重定向完成”的提示框。
 - ![ikmz1z15 gc1](https://github.com/user-attachments/assets/1a825c8c-2b2f-403f-8730-79b26c0a21ac)

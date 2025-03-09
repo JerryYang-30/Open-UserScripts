@@ -56,10 +56,9 @@ PS: I basically didn't find a single script for YouTube Watch Later, so I wrote 
 
 - The script automatically fetches the original link for each video in advance when the [YouTube Watch Later page](https://www.youtube.com/playlist?list=WL) opens, and returns the prompt by default, which disappears after 3 seconds by default (bottom right in the image below).
 - ![qjf50ni5 2de](https://github.com/user-attachments/assets/39bbaa0e-e758-4d3a-8e90-cbadb5a540fe)
-- When you click with the left mouse button on the red part of the image below (except in the green box), the script will open the original link of the video in a new tab.
-- When you click with the middle mouse button on the part of the blue box below, the script will open the original link of the video in a new tab.
+- When you click with the left or middle mouse button on the red part of the image below (except in the green box), the script will open the original link of the video in a new tab.
 - When you click on the author of the video (in the green box below) with the left or middle mouse button, the script determines that you should not redirect at this point and opens the author's profile page instead.
-- ![afytb1r1 0px](https://github.com/user-attachments/assets/e6170b88-2a40-40b3-80f7-60b8f5afb8ac)
+- ![afytb1r1 0px](https://github.com/user-attachments/assets/b73b4982-e866-4833-aafd-8f617795fe91)
 - You can customize whether or not to display the “Redirection Complete” alert box through the TamperMonkey Script Settings menu.
 - ![m1tobvex nms](https://github.com/user-attachments/assets/317d350b-4c50-463f-9e93-c8e454a80a07)
 - ![wc0r5hp3 von](https://github.com/user-attachments/assets/b701f0b6-30a3-4a3a-96bc-7c390f59bd84)
