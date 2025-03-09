@@ -73,7 +73,8 @@ Please watch [CHANGELOG](https://github.com/JerryYang-30/YouTube-Watch-Later-Red
 
 ## Update_Plans
 
-- Not yet available
+- [ ] Refactor the code using Claude (the previous code written by GPT was too disorganized)
+- [ ] Add new feature: Export the list of videos to watch later to a TXT file
 
 ## Contribution_and_Feedback
 
