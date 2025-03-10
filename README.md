@@ -1,4 +1,5 @@
 # YouTube 稍后再看重定向脚本
+
 油猴脚本：当你用鼠标左键或中键点击YouTube稍后观看列表中的视频时，自动将链接重定向到该视频的原始链接，并在新标签页中打开。
 
 **简体中文** | [English](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/blob/main/README_en.md)
