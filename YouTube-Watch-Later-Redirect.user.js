@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         YouTube 稍后再看重定向 测试
+// @name         YouTube 稍后再看重定向
 // @name:en      YouTube Watch Later Redirect
-// @name:zh-CN   YouTube 稍后再看重定向 测试
+// @name:zh-CN   YouTube 稍后再看重定向
 // @name:zh-TW   YouTube 稍後再看重定向
 // @namespace    http://tampermonkey.net/
-// @version      1.1.20250309
+// @version      1.1.20250312
 // @author       JerryYang
 // @description  重定向YouTube稍后再看的视频链接到原始视频链接，并在新标签页中打开视频。
 // @description:en  Redirect YouTube Watch Later video links to their original video and open in a new tab.
