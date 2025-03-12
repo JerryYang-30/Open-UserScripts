@@ -595,19 +595,35 @@ const t = translations[lang];
             
             let videoLinks = [];
             let videoTitles = [];
+            let videoAuthors = [];
+            let authorLinks = [];
             
             items.forEach(item => {
                 const metaArea = item.querySelector('div#meta');
                 if (metaArea) {
+                    // 获取视频标题和链接
                     const videoTitle = metaArea.querySelector('a#video-title');
                     if (videoTitle) {
                         const href = videoTitle.getAttribute('href');
                         if (href && href.includes('list=WL')) {
+                            // 获取视频链接及标题
                             const videoId = href.match(/v=([^&]+)/)[1];
                             const originalUrl = `https://www.youtube.com/watch?v=${videoId}`;
                             const title = videoTitle.textContent.trim();
                             videoLinks.push(originalUrl);
                             videoTitles.push(title);
+                            
+                            // 获取作者信息
+                            const authorElement = metaArea.querySelector('a.yt-simple-endpoint.style-scope.yt-formatted-string');
+                            if (authorElement) {
+                                const authorName = authorElement.textContent.trim();
+                                const authorUrl = `https://www.youtube.com${authorElement.getAttribute('href')}`;
+                                videoAuthors.push(authorName);
+                                authorLinks.push(authorUrl);
+                            } else {
+                                videoAuthors.push('Unknown Author');
+                                authorLinks.push('');
+                            }
                         }
                     }
                 }
@@ -619,7 +635,7 @@ const t = translations[lang];
                 
                 // 添加带序号的视频信息
                 for (let i = 0; i < videoLinks.length; i++) {
-                    exportContent += `Video index: ${i + 1}\n${videoTitles[i]}\n${videoLinks[i]}\n\n`;
+                    exportContent += `Video index: ${i + 1}\n${videoTitles[i]}\nauthor: ${videoAuthors[i]}, ${authorLinks[i]}\n${videoLinks[i]}\n\n`;
                 }
                 
                 // 创建下载链接
