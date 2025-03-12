@@ -14,8 +14,6 @@ when you click on a video in the YouTube Watch Later list with the left or middl
 
 [Installation](#Installation)
 
-[Instructions](#Instructions)
-
 [Version Updates](#Version_Updates)
 
 [Update Plans](#Update_Plans)
@@ -38,11 +36,12 @@ PS: I basically didn't find a single script for YouTube Watch Later, so I wrote 
 
 ## Introduction
 
-- Automatically redirects video links in the Watch Later list to the original link of the video. (Currently only for clicks from the [YouTube Watch Later page](https://www.youtube.com/playlist?list=WL))
+- Automatically redirects video links in the Watch Later list to the original link of the video.
 - Support left and center mouse click operations.
-- Show redirection tips on the page, and support customizing the tip box style.
-- For YouTube Single Page Applications (SPA), accessing the Watch Later page from the left sidebar of YouTube will also be listened to. (i.e. clicking from the red box in the image below to watch later)
-- ![jhz2veqj dnj](https://github.com/user-attachments/assets/de786f65-5254-4fe9-b3fc-c98de3165d61)
+- Show *redirection done* tips on the page, and support customizing the tip box style.
+- Support for exporting *Watch Later* video list.
+- When you click on the author of the video (in the green box below) with the left or middle mouse button, the script determines that you should not redirect at this point and opens the author's profile page instead.
+- ![afytb1r1 0px](https://github.com/user-attachments/assets/b73b4982-e866-4833-aafd-8f617795fe91)
 
 
 ## Installation
@@ -52,20 +51,7 @@ PS: I basically didn't find a single script for YouTube Watch Later, so I wrote 
 3. Or [→Click Here←](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/raw/main/YouTube-Watch-Later-Redirect.user.js) to install it now.(Update with GreasyFork source)
    
 
-## Instructions
 
-- The script automatically fetches the original link for each video in advance when the [YouTube Watch Later page](https://www.youtube.com/playlist?list=WL) opens, and returns the prompt by default, which disappears after 3 seconds by default (bottom right in the image below).
-- ![qjf50ni5 2de](https://github.com/user-attachments/assets/39bbaa0e-e758-4d3a-8e90-cbadb5a540fe)
-- When you click with the left or middle mouse button on the red part of the image below (except in the green box), the script will open the original link of the video in a new tab.
-- When you click on the author of the video (in the green box below) with the left or middle mouse button, the script determines that you should not redirect at this point and opens the author's profile page instead.
-- ![afytb1r1 0px](https://github.com/user-attachments/assets/b73b4982-e866-4833-aafd-8f617795fe91)
-- You can customize whether or not to display the “Redirection Complete” alert box through the TamperMonkey Script Settings menu.
-- ![m1tobvex nms](https://github.com/user-attachments/assets/317d350b-4c50-463f-9e93-c8e454a80a07)
-- ![wc0r5hp3 von](https://github.com/user-attachments/assets/b701f0b6-30a3-4a3a-96bc-7c390f59bd84)
-
-- The position, size, auto-hide time, and prompt word of the prompt box can be adjusted through the TamperMonkey script settings menu.
-- ![nulk3d1k i5t](https://github.com/user-attachments/assets/962120d8-0b76-41fd-ba78-bcf8f590e9eb)
-- ![akxa0wcj 1gp](https://github.com/user-attachments/assets/b9a88306-3673-4d48-b232-7c951bc5b0c3)
 
 ## Version_Updates
 
@@ -74,7 +60,7 @@ Please watch [CHANGELOG](https://github.com/JerryYang-30/YouTube-Watch-Later-Red
 ## Update_Plans
 
 - [ ] Refactor the code using Claude (the previous code written by GPT was too disorganized)
-- [ ] Add new feature: Export the list of videos to watch later to a TXT file
+- [x] Add new feature: Export the list of videos to watch later to a TXT file
 
 ## Contribution_and_Feedback
 
