@@ -614,10 +614,12 @@ const t = translations[lang];
             });
             
             if (videoLinks.length > 0) {
-                // 创建导出内容
-                let exportContent = '';
+                // 创建导出内容，添加视频总数信息
+                let exportContent = `Totally ${videoLinks.length} videos exported!\n\n`;
+                
+                // 添加带序号的视频信息
                 for (let i = 0; i < videoLinks.length; i++) {
-                    exportContent += `${videoTitles[i]}\n${videoLinks[i]}\n\n`;
+                    exportContent += `Video index: ${i + 1}\n${videoTitles[i]}\n${videoLinks[i]}\n\n`;
                 }
                 
                 // 创建下载链接
