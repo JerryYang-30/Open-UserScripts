@@ -4,7 +4,7 @@
 // @name:zh-CN   YouTube 稍后再看重定向
 // @name:zh-TW   YouTube 稍後再看重定向
 // @namespace    http://tampermonkey.net/
-// @version      1.1.20250309
+// @version      1.1.20250312
 // @author       JerryYang
 // @description  重定向YouTube稍后再看的视频链接到原始视频链接，并在新标签页中打开视频。
 // @description:en  Redirect YouTube Watch Later video links to their original video and open in a new tab.
@@ -53,7 +53,10 @@ const translations = {
         "adjustPanelSave": "Save",
         "adjustPanelCancel": "Cancel",
         "adjustPanelReset": "Restore default settings",
-        "adjustPanelPlaceholder": "Currently "
+        "adjustPanelPlaceholder": "Currently ",
+        "exportList": "Export Watch Later List",
+        "exportSuccess": "Export successful! The file has been saved to your downloads folder.",
+        "noVideosFound": "No videos found in the Watch Later list."
     },
     "zh-CN": {
         "notificationMessage": "全部视频已成功重定向！",
@@ -76,7 +79,10 @@ const translations = {
         "adjustPanelSave": "保存",
         "adjustPanelCancel": "取消",
         "adjustPanelReset": "恢复默认设置",
-        "adjustPanelPlaceholder": "当前为"
+        "adjustPanelPlaceholder": "当前为",
+        "exportList": "导出稍后观看列表",
+        "exportSuccess": "导出成功！文件已保存到下载文件夹。",
+        "noVideosFound": "稍后观看列表中未找到视频。"
     },
     "zh-TW": {
         "notificationMessage": "全部影片已成功重新導向！",
@@ -99,7 +105,10 @@ const translations = {
         "adjustPanelSave": "保存",
         "adjustPanelCancel": "取消",
         "adjustPanelReset": "恢復默認設置",
-        "adjustPanelPlaceholder": "當前爲"
+        "adjustPanelPlaceholder": "當前爲",
+        "exportList": "導出稍後觀看列表",
+        "exportSuccess": "導出成功！文件已保存到下載文件夾。",
+        "noVideosFound": "稍後觀看列表中未找到影片。"
     }
 };
 
@@ -302,6 +311,9 @@ const t = translations[lang];
             GM_registerMenuCommand(t.disableNotification, toggleNotification);
             GM_registerMenuCommand(t.adjustNotificationStyle, createStyleAdjustmentPanel);
         }
+        
+        // 添加导出列表菜单项
+        GM_registerMenuCommand(t.exportList, exportWatchLaterList);
     }
 
     // 打开提示框开关菜单
@@ -562,6 +574,89 @@ const t = translations[lang];
         setTimeout(() => {
             notification.style.opacity = '0'; // 隐藏提示框
         }, settings.hideAfter);
+    }
+
+    // 导出稍后观看列表
+    function exportWatchLaterList() {
+        // 确保当前页面是稍后观看列表
+        if (window.location.href !== "https://www.youtube.com/playlist?list=WL") {
+            window.open("https://www.youtube.com/playlist?list=WL", "_blank");
+            return;
+        }
+        
+        // 等待页面加载完成
+        setTimeout(() => {
+            const items = document.querySelectorAll('div#content.style-scope.ytd-playlist-video-renderer');
+            
+            if (items.length === 0) {
+                alert(t.noVideosFound);
+                return;
+            }
+            
+            let videoLinks = [];
+            let videoTitles = [];
+            let videoAuthors = [];
+            let authorLinks = [];
+            
+            items.forEach(item => {
+                const metaArea = item.querySelector('div#meta');
+                if (metaArea) {
+                    // 获取视频标题和链接
+                    const videoTitle = metaArea.querySelector('a#video-title');
+                    if (videoTitle) {
+                        const href = videoTitle.getAttribute('href');
+                        if (href && href.includes('list=WL')) {
+                            // 获取视频链接及标题
+                            const videoId = href.match(/v=([^&]+)/)[1];
+                            const originalUrl = `https://www.youtube.com/watch?v=${videoId}`;
+                            const title = videoTitle.textContent.trim();
+                            videoLinks.push(originalUrl);
+                            videoTitles.push(title);
+                            
+                            // 获取作者信息
+                            const authorElement = metaArea.querySelector('a.yt-simple-endpoint.style-scope.yt-formatted-string');
+                            if (authorElement) {
+                                const authorName = authorElement.textContent.trim();
+                                const authorUrl = `https://www.youtube.com${authorElement.getAttribute('href')}`;
+                                videoAuthors.push(authorName);
+                                authorLinks.push(authorUrl);
+                            } else {
+                                videoAuthors.push('Unknown Author');
+                                authorLinks.push('');
+                            }
+                        }
+                    }
+                }
+            });
+            
+            if (videoLinks.length > 0) {
+                // 创建导出内容，添加视频总数信息
+                let exportContent = `Totally ${videoLinks.length} videos exported!\n\n`;
+                
+                // 添加带序号的视频信息
+                for (let i = 0; i < videoLinks.length; i++) {
+                    exportContent += `Video index: ${i + 1}\n${videoTitles[i]}\nauthor: ${videoAuthors[i]}, ${authorLinks[i]}\n${videoLinks[i]}\n\n`;
+                }
+                
+                // 创建下载链接
+                const blob = new Blob([exportContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                const date = new Date();
+                const dateString = `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}-${date.getHours().toString().padStart(2, '0')}${date.getMinutes().toString().padStart(2, '0')}${date.getSeconds().toString().padStart(2, '0')}`;
+                a.href = url;
+                a.download = `YouTube-Watch-Later-List-${dateString}.txt`;
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                alert(t.exportSuccess);
+            } else {
+                alert(t.noVideosFound);
+            }
+        }, 2000); // 给页面加载留出足够时间
     }
 
 })();
