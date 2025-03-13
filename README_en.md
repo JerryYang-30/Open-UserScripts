@@ -8,17 +8,17 @@ when you click on a video in the YouTube Watch Later list with the left or middl
 
 ### Table of Contents
 
-[Background](#Background)
+[Background](#background)
 
-[Introduction](#Introduction)
+[Introduction](#introduction)
 
-[Installation](#Installation)
+[Installation](#installation)
 
-[Version Updates](#Version_Updates)
+[Version Updates](#version-updates)
 
-[Update Plans](#Update_Plans)
+[Update Plans](#update-plans)
 
-[Contribution and Feedback](#Contribution_and_Feedback)
+[Contribution and Feedback](#contribution-and-feedback)
 
 ## Background
 
@@ -53,15 +53,15 @@ PS: I basically didn't find a single script for YouTube Watch Later, so I wrote 
 
 
 
-## Version_Updates
+## Version Updates
 
 Please watch [CHANGELOG](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/blob/main/CHANGELOG.md)
 
-## Update_Plans
+## Update Plans
 
 - [ ] Refactor the code using Claude (the previous code written by GPT was too disorganized)
 - [x] Add new feature: Export the list of videos to watch later to a TXT file
 
-## Contribution_and_Feedback
+## Contribution and Feedback
 
 If you've found a problem, or have any suggestions for improvements, feel free to submit feedback via [GreasyFork](https://greasyfork.org/zh-CN/scripts/507417-youtube-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91/feedback) or on [GitHub Issue](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/issues) or [Pull Request](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/pulls). Your feedback and contributions are greatly appreciated!
