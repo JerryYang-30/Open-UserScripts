@@ -2,7 +2,7 @@
 
 油猴脚本：当你用鼠标左键或中键点击YouTube稍后观看列表中的视频时，自动将链接重定向到该视频的原始链接，并在新标签页中打开。
 
-**简体中文** | [English](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/blob/main/README_en.md)
+**简体中文** | [English](https://github.com/JerryYang-30/Open-UserScripts/blob/main/README_en.md)
 
 ### 目录
 
@@ -46,7 +46,7 @@ PS：关于YouTube稍后观看的脚本，我基本一个也没有搜到，为�
 
 1. 安装浏览器扩展 [Tampermonkey](https://www.tampermonkey.net/)。
 2. 在[GreasyFork](https://greasyfork.org/zh-CN/scripts/507417-youtube-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91)安装。
-3. 或 [→点击此处←](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/raw/main/YouTube-Watch-Later-Redirect.user.js) 立刻安装（利用GreasyFork源更新）。
+3. 或 [→点击此处←](https://github.com/JerryYang-30/Open-UserScripts/raw/main/YouTube-Watch-Later-Redirect.user.js) 立刻安装（利用GreasyFork源更新）。
    
 
 
@@ -54,7 +54,7 @@ PS：关于YouTube稍后观看的脚本，我基本一个也没有搜到，为�
 
 ## 版本更新历史
 
-请看[CHANGELOG](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/blob/main/CHANGELOG.md)
+请看[CHANGELOG](https://github.com/JerryYang-30/Open-UserScripts/blob/main/CHANGELOG.md)
 
 ## 更新计划
 
@@ -63,4 +63,4 @@ PS：关于YouTube稍后观看的脚本，我基本一个也没有搜到，为�
 
 ## 贡献与反馈
 
-如果你在使用过程中发现问题，或者有任何改进建议，欢迎通过 [GreasyFork](https://greasyfork.org/zh-CN/scripts/507417-youtube-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91/feedback) 提交反馈 或在 [GitHub](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect) 提交 [Issue](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/issues) 或 [Pull Request](https://github.com/JerryYang-30/YouTube-Watch-Later-Redirect/pulls)。非常感谢你的反馈和贡献！
+如果你在使用过程中发现问题，或者有任何改进建议，欢迎通过 [GreasyFork](https://greasyfork.org/zh-CN/scripts/507417-youtube-%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91/feedback) 提交反馈 或在 [GitHub](https://github.com/JerryYang-30/Open-UserScripts) 提交 [Issue](https://github.com/JerryYang-30/Open-UserScripts/issues) 或 [Pull Request](https://github.com/JerryYang-30/Open-UserScripts/pulls)。非常感谢你的反馈和贡献！
