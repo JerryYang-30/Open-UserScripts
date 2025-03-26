@@ -4,7 +4,7 @@
 // @name:zh-CN   YouTube 稍后再看重定向
 // @name:zh-TW   YouTube 稍後再看重定向
 // @namespace    http://tampermonkey.net/
-// @version      1.1.20250312
+// @version      1.1.20250326
 // @author       JerryYang
 // @description  重定向YouTube稍后再看的视频链接到原始视频链接，并在新标签页中打开视频。
 // @description:en  Redirect YouTube Watch Later video links to their original video and open in a new tab.
@@ -12,7 +12,7 @@
 // @description:zh-TW  重定向YouTube稍後再看的影片連結到原始影片，並在新標籤頁中開啟影片。
 // @license      GPL-3.0 License
 // @homepage     https://github.com/JerryYang-30/Open-UserScripts
-// @supportURL   https://github.com/JerryYang-30/Open-UserScripts
+// @supportURL   https://github.com/JerryYang-30/Open-UserScripts/issues
 // @match        https://www.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=YouTube.com
 // @grant        GM_setValue
